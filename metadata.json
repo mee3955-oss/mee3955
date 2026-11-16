@@ -1,0 +1,6 @@
+{
+  "name": "Wayfarer Folio — 여행 매거진 스타일 개인 홈페이지",
+  "description": "여행 매거진의 시선으로 기록한 개인 홈페이지, 여정 아카이브, 이력서 제출 및 관리자 콘솔",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

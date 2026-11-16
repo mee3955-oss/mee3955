@@ -1,0 +1,228 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Core primitives
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.email == 'mee3955@gmail.com';
+    }
+
+    // Validation Helpers
+    function isValidSiteSettings(data) {
+      return data.keys().hasAll([
+          'siteTitle', 'heroKicker', 'heroHeadline', 'heroDescription',
+          'authorName', 'authorRole', 'authorBio', 'contactEmail',
+          'citiesExplored', 'dispatchesCount', 'projectsCount', 'resumeStatus', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'siteTitle', 'heroKicker', 'heroHeadline', 'heroDescription',
+          'authorName', 'authorRole', 'authorBio', 'contactEmail',
+          'citiesExplored', 'dispatchesCount', 'projectsCount', 'resumeStatus', 'updatedAt'
+        ])
+        && data.siteTitle is string && data.siteTitle.size() >= 1 && data.siteTitle.size() <= 80
+        && data.heroKicker is string && data.heroKicker.size() >= 1 && data.heroKicker.size() <= 120
+        && data.heroHeadline is string && data.heroHeadline.size() >= 1 && data.heroHeadline.size() <= 160
+        && data.heroDescription is string && data.heroDescription.size() >= 1 && data.heroDescription.size() <= 600
+        && data.authorName is string && data.authorName.size() >= 1 && data.authorName.size() <= 80
+        && data.authorRole is string && data.authorRole.size() >= 1 && data.authorRole.size() <= 120
+        && data.authorBio is string && data.authorBio.size() >= 1 && data.authorBio.size() <= 1000
+        && data.contactEmail is string && data.contactEmail.size() >= 3 && data.contactEmail.size() <= 120
+        && data.citiesExplored is number && data.citiesExplored >= 0 && data.citiesExplored <= 10000
+        && data.dispatchesCount is number && data.dispatchesCount >= 0 && data.dispatchesCount <= 10000
+        && data.projectsCount is number && data.projectsCount >= 0 && data.projectsCount <= 10000
+        && data.resumeStatus in ['preparing', 'published']
+        && data.updatedAt is timestamp
+        && data.updatedAt == request.time;
+    }
+
+    function isValidDispatch(data) {
+      return data.keys().hasAll([
+          'title', 'destination', 'country', 'coordinates', 'dateLabel',
+          'category', 'cameraNote', 'summary', 'story', 'imageUrl',
+          'featured', 'isPublished', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'title', 'destination', 'country', 'coordinates', 'dateLabel',
+          'category', 'cameraNote', 'summary', 'story', 'imageUrl',
+          'featured', 'isPublished', 'createdAt', 'updatedAt'
+        ])
+        && data.title is string && data.title.size() >= 1 && data.title.size() <= 140
+        && data.destination is string && data.destination.size() >= 1 && data.destination.size() <= 100
+        && data.country is string && data.country.size() >= 1 && data.country.size() <= 80
+        && data.coordinates is string && data.coordinates.size() >= 1 && data.coordinates.size() <= 60
+        && data.dateLabel is string && data.dateLabel.size() >= 1 && data.dateLabel.size() <= 40
+        && data.category in ['도시 산책', '자연 & 풍경', '건축 & 공간', '작업 노트']
+        && data.cameraNote is string && data.cameraNote.size() <= 100
+        && data.summary is string && data.summary.size() >= 1 && data.summary.size() <= 400
+        && data.story is string && data.story.size() >= 1 && data.story.size() <= 5000
+        && data.imageUrl is string && data.imageUrl.size() >= 1 && data.imageUrl.size() <= 600
+        && data.featured is bool
+        && data.isPublished is bool
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp
+        && data.updatedAt == request.time;
+    }
+
+    function isValidPrivateResume(data) {
+      return data.keys().hasAll([
+          'versionTitle', 'fullName', 'headline', 'summary',
+          'experienceText', 'educationText', 'skillsText', 'linksText',
+          'fileName', 'fileMimeType', 'fileDataUrl', 'privateMemo',
+          'isActivePublic', 'ownerUid', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'versionTitle', 'fullName', 'headline', 'summary',
+          'experienceText', 'educationText', 'skillsText', 'linksText',
+          'fileName', 'fileMimeType', 'fileDataUrl', 'privateMemo',
+          'isActivePublic', 'ownerUid', 'createdAt', 'updatedAt'
+        ])
+        && data.versionTitle is string && data.versionTitle.size() >= 1 && data.versionTitle.size() <= 120
+        && data.fullName is string && data.fullName.size() >= 1 && data.fullName.size() <= 80
+        && data.headline is string && data.headline.size() >= 1 && data.headline.size() <= 160
+        && data.summary is string && data.summary.size() >= 1 && data.summary.size() <= 2500
+        && data.experienceText is string && data.experienceText.size() <= 6000
+        && data.educationText is string && data.educationText.size() <= 2000
+        && data.skillsText is string && data.skillsText.size() <= 1000
+        && data.linksText is string && data.linksText.size() <= 1000
+        && data.fileName is string && data.fileName.size() <= 200
+        && data.fileMimeType is string && data.fileMimeType.size() <= 120
+        && data.fileDataUrl is string && data.fileDataUrl.size() <= 700000
+        && data.privateMemo is string && data.privateMemo.size() <= 1500
+        && data.isActivePublic is bool
+        && data.ownerUid is string && data.ownerUid == request.auth.uid && isValidId(data.ownerUid)
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp
+        && data.updatedAt == request.time;
+    }
+
+    function isValidPublicResume(data) {
+      return data.keys().hasAll([
+          'fullName', 'headline', 'summary',
+          'experienceText', 'educationText', 'skillsText', 'linksText',
+          'fileName', 'fileMimeType', 'fileDataUrl', 'isVisible', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'fullName', 'headline', 'summary',
+          'experienceText', 'educationText', 'skillsText', 'linksText',
+          'fileName', 'fileMimeType', 'fileDataUrl', 'isVisible', 'updatedAt'
+        ])
+        && data.fullName is string && data.fullName.size() >= 1 && data.fullName.size() <= 80
+        && data.headline is string && data.headline.size() >= 1 && data.headline.size() <= 160
+        && data.summary is string && data.summary.size() >= 1 && data.summary.size() <= 2500
+        && data.experienceText is string && data.experienceText.size() <= 6000
+        && data.educationText is string && data.educationText.size() <= 2000
+        && data.skillsText is string && data.skillsText.size() <= 1000
+        && data.linksText is string && data.linksText.size() <= 1000
+        && data.fileName is string && data.fileName.size() <= 200
+        && data.fileMimeType is string && data.fileMimeType.size() <= 120
+        && data.fileDataUrl is string && data.fileDataUrl.size() <= 700000
+        && data.isVisible is bool
+        && data.updatedAt is timestamp
+        && data.updatedAt == request.time;
+    }
+
+    function isValidInquiry(data) {
+      return data.keys().hasAll([
+          'senderUid', 'senderName', 'senderEmail', 'subject', 'message', 'status', 'createdAt'
+        ])
+        && data.keys().hasOnly([
+          'senderUid', 'senderName', 'senderEmail', 'subject', 'message', 'status', 'createdAt'
+        ])
+        && data.senderUid is string && isValidId(data.senderUid)
+        && data.senderName is string && data.senderName.size() >= 1 && data.senderName.size() <= 80
+        && data.senderEmail is string && data.senderEmail.size() >= 3 && data.senderEmail.size() <= 120
+        && data.subject is string && data.subject.size() >= 1 && data.subject.size() <= 140
+        && data.message is string && data.message.size() >= 1 && data.message.size() <= 2000
+        && data.status in ['unread', 'read']
+        && data.createdAt is timestamp;
+    }
+
+    // 1. Public Homepage Settings
+    match /site_settings/{settingId} {
+      allow get: if isValidId(settingId) && settingId == 'main';
+      allow list: if false;
+      allow create: if isValidId(settingId) && settingId == 'main' && isAdmin() && isValidSiteSettings(incoming());
+      allow update: if isValidId(settingId) && settingId == 'main' && isAdmin() && isValidSiteSettings(incoming());
+      allow delete: if false;
+    }
+
+    // 2. Travel & Portfolio Dispatches
+    match /dispatches/{dispatchId} {
+      allow get: if isValidId(dispatchId) && (existing().isPublished == true || isAdmin());
+      allow list: if resource.data.isPublished == true || isAdmin();
+      allow create: if isValidId(dispatchId)
+        && isAdmin()
+        && isValidDispatch(incoming())
+        && incoming().createdAt == request.time;
+      allow update: if isValidId(dispatchId)
+        && isAdmin()
+        && isValidDispatch(incoming())
+        && incoming().createdAt == existing().createdAt;
+      allow delete: if isValidId(dispatchId) && isAdmin();
+    }
+
+    // 3. Private Owner Resumes (Strictly Admin-Only)
+    match /resumes/{resumeId} {
+      allow get: if isValidId(resumeId) && isAdmin();
+      allow list: if isAdmin();
+      allow create: if isValidId(resumeId)
+        && isAdmin()
+        && isValidPrivateResume(incoming())
+        && incoming().createdAt == request.time;
+      allow update: if isValidId(resumeId)
+        && isAdmin()
+        && isValidPrivateResume(incoming())
+        && incoming().createdAt == existing().createdAt
+        && incoming().ownerUid == existing().ownerUid;
+      allow delete: if isValidId(resumeId) && isAdmin();
+    }
+
+    // 4. Publicly Published Resume Snapshot
+    match /public_resume/{docId} {
+      allow get: if isValidId(docId) && docId == 'current' && (existing().isVisible == true || isAdmin());
+      allow list: if false;
+      allow create: if isValidId(docId) && docId == 'current' && isAdmin() && isValidPublicResume(incoming());
+      allow update: if isValidId(docId) && docId == 'current' && isAdmin() && isValidPublicResume(incoming());
+      allow delete: if isValidId(docId) && docId == 'current' && isAdmin();
+    }
+
+    // 5. Visitor Inquiries / Postcards (Create by verified signed-in user; Read/Manage only by Admin)
+    match /inquiries/{inquiryId} {
+      allow get: if isValidId(inquiryId) && isAdmin();
+      allow list: if isAdmin();
+      allow create: if isValidId(inquiryId)
+        && isSignedIn()
+        && isValidInquiry(incoming())
+        && incoming().senderUid == request.auth.uid
+        && incoming().status == 'unread'
+        && incoming().createdAt == request.time;
+      allow update: if isValidId(inquiryId)
+        && isAdmin()
+        && isValidInquiry(incoming())
+        && incoming().diff(existing()).affectedKeys().hasOnly(['status'])
+        && incoming().createdAt == existing().createdAt
+        && incoming().senderUid == existing().senderUid;
+      allow delete: if isValidId(inquiryId) && isAdmin();
+    }
+  }
+}

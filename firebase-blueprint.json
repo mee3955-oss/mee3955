@@ -1,0 +1,198 @@
+{
+  "entities": {
+    "SiteSettings": {
+      "title": "SiteSettings",
+      "description": "Public homepage editorial configuration and summary metrics managed by the site owner.",
+      "type": "object",
+      "properties": {
+        "siteTitle": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "heroKicker": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "heroHeadline": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "heroDescription": { "type": "string", "minLength": 1, "maxLength": 600 },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "authorRole": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "authorBio": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "contactEmail": { "type": "string", "minLength": 3, "maxLength": 120 },
+        "citiesExplored": { "type": "number" },
+        "dispatchesCount": { "type": "number" },
+        "projectsCount": { "type": "number" },
+        "resumeStatus": { "type": "string", "enum": ["preparing", "published"] },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "siteTitle",
+        "heroKicker",
+        "heroHeadline",
+        "heroDescription",
+        "authorName",
+        "authorRole",
+        "authorBio",
+        "contactEmail",
+        "citiesExplored",
+        "dispatchesCount",
+        "projectsCount",
+        "resumeStatus",
+        "updatedAt"
+      ]
+    },
+    "TravelDispatch": {
+      "title": "TravelDispatch",
+      "description": "A travelogue entry or portfolio story displayed in the editorial bento archive.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 140 },
+        "destination": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "country": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "coordinates": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "dateLabel": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "category": {
+          "type": "string",
+          "enum": ["도시 산책", "자연 & 풍경", "건축 & 공간", "작업 노트"]
+        },
+        "cameraNote": { "type": "string", "minLength": 0, "maxLength": 100 },
+        "summary": { "type": "string", "minLength": 1, "maxLength": 400 },
+        "story": { "type": "string", "minLength": 1, "maxLength": 5000 },
+        "imageUrl": { "type": "string", "minLength": 1, "maxLength": 600 },
+        "featured": { "type": "boolean" },
+        "isPublished": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "title",
+        "destination",
+        "country",
+        "coordinates",
+        "dateLabel",
+        "category",
+        "cameraNote",
+        "summary",
+        "story",
+        "imageUrl",
+        "featured",
+        "isPublished",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "PrivateResume": {
+      "title": "PrivateResume",
+      "description": "Owner-only submitted resume versions and uploaded PDF/file drafts.",
+      "type": "object",
+      "properties": {
+        "versionTitle": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "fullName": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "headline": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "summary": { "type": "string", "minLength": 1, "maxLength": 2500 },
+        "experienceText": { "type": "string", "minLength": 0, "maxLength": 6000 },
+        "educationText": { "type": "string", "minLength": 0, "maxLength": 2000 },
+        "skillsText": { "type": "string", "minLength": 0, "maxLength": 1000 },
+        "linksText": { "type": "string", "minLength": 0, "maxLength": 1000 },
+        "fileName": { "type": "string", "minLength": 0, "maxLength": 200 },
+        "fileMimeType": { "type": "string", "minLength": 0, "maxLength": 120 },
+        "fileDataUrl": { "type": "string", "minLength": 0, "maxLength": 700000 },
+        "privateMemo": { "type": "string", "minLength": 0, "maxLength": 1500 },
+        "isActivePublic": { "type": "boolean" },
+        "ownerUid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "versionTitle",
+        "fullName",
+        "headline",
+        "summary",
+        "experienceText",
+        "educationText",
+        "skillsText",
+        "linksText",
+        "fileName",
+        "fileMimeType",
+        "fileDataUrl",
+        "privateMemo",
+        "isActivePublic",
+        "ownerUid",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "PublicResume": {
+      "title": "PublicResume",
+      "description": "Publicly visible snapshot of the owner's resume when published.",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "headline": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "summary": { "type": "string", "minLength": 1, "maxLength": 2500 },
+        "experienceText": { "type": "string", "minLength": 0, "maxLength": 6000 },
+        "educationText": { "type": "string", "minLength": 0, "maxLength": 2000 },
+        "skillsText": { "type": "string", "minLength": 0, "maxLength": 1000 },
+        "linksText": { "type": "string", "minLength": 0, "maxLength": 1000 },
+        "fileName": { "type": "string", "minLength": 0, "maxLength": 200 },
+        "fileMimeType": { "type": "string", "minLength": 0, "maxLength": 120 },
+        "fileDataUrl": { "type": "string", "minLength": 0, "maxLength": 700000 },
+        "isVisible": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "fullName",
+        "headline",
+        "summary",
+        "experienceText",
+        "educationText",
+        "skillsText",
+        "linksText",
+        "fileName",
+        "fileMimeType",
+        "fileDataUrl",
+        "isVisible",
+        "updatedAt"
+      ]
+    },
+    "VisitorInquiry": {
+      "title": "VisitorInquiry",
+      "description": "Postcard inquiry submitted by a verified visitor to the site owner.",
+      "type": "object",
+      "properties": {
+        "senderUid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "senderName": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "senderEmail": { "type": "string", "minLength": 3, "maxLength": 120 },
+        "subject": { "type": "string", "minLength": 1, "maxLength": 140 },
+        "message": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "status": { "type": "string", "enum": ["unread", "read"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "senderUid",
+        "senderName",
+        "senderEmail",
+        "subject",
+        "message",
+        "status",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/site_settings/{settingId}": {
+      "schema": { "$ref": "#/entities/SiteSettings" },
+      "description": "Public homepage metadata and hero configuration (document ID: main)."
+    },
+    "/dispatches/{dispatchId}": {
+      "schema": { "$ref": "#/entities/TravelDispatch" },
+      "description": "Travelogue entries and curated portfolio stories."
+    },
+    "/resumes/{resumeId}": {
+      "schema": { "$ref": "#/entities/PrivateResume" },
+      "description": "Owner-only submitted resume versions, drafts, and attachments."
+    },
+    "/public_resume/{docId}": {
+      "schema": { "$ref": "#/entities/PublicResume" },
+      "description": "Publicly readable resume snapshot (document ID: current) when isVisible is true."
+    },
+    "/inquiries/{inquiryId}": {
+      "schema": { "$ref": "#/entities/VisitorInquiry" },
+      "description": "Visitor messages/postcards readable only by the site owner."
+    }
+  }
+}
