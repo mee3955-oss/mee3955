@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { CheckCircle2, Mail, Send } from 'lucide-react';
+import { ArrowUpRight, CheckCircle2, Mail, Send } from 'lucide-react';
 import type { User } from 'firebase/auth';
 import { GENERATED_IMAGES } from '../data/defaultData';
 import { FIELD_LIMITS, type SiteSettings } from '../types';
@@ -93,6 +93,24 @@ export function AboutAndPostcard({
                   <Mail className="w-4 h-4 text-zinc-400" />
                   <span className="font-mono text-xs">{settings.contactEmail}</span>
                 </div>
+                <a
+                  href="https://github.com/mee3955-oss"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 font-mono text-xs text-zinc-700 hover:text-blue-700 transition-colors"
+                >
+                  <span>GitHub · @mee3955-oss</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
+                <a
+                  href="https://github.com/mee3955-oss/yeongmi"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 font-mono text-xs text-zinc-700 hover:text-blue-700 transition-colors"
+                >
+                  <span>Repository · yeongmi</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
               </div>
             </div>
           </div>

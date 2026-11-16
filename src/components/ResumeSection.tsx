@@ -123,9 +123,29 @@ export function ResumeSection({
                     <h4 className="text-xs font-semibold tracking-wide text-zinc-500 mb-3">
                       외부 링크
                     </h4>
-                    <p className="text-sm leading-relaxed text-zinc-600 font-mono whitespace-pre-line break-all">
-                      {publicResume.linksText}
-                    </p>
+                    <div className="space-y-1.5 text-sm font-mono break-all">
+                      {publicResume.linksText
+                        .split('\n')
+                        .map((line) => line.trim())
+                        .filter(Boolean)
+                        .map((line, idx) =>
+                          /^https?:\/\//i.test(line) ? (
+                            <a
+                              key={`${line}-${idx}`}
+                              href={line}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block text-blue-700 hover:underline"
+                            >
+                              {line}
+                            </a>
+                          ) : (
+                            <p key={`${line}-${idx}`} className="text-zinc-600">
+                              {line}
+                            </p>
+                          )
+                        )}
+                    </div>
                   </div>
                 )}
               </div>

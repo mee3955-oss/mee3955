@@ -155,6 +155,14 @@ export default function App() {
             >
               이력서
             </button>
+            <a
+              href="https://github.com/mee3955-oss"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-zinc-900"
+            >
+              GitHub
+            </a>
             <button
               type="button"
               onClick={() => openAdminTab('resume')}

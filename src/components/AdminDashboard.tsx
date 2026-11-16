@@ -110,7 +110,9 @@ export function AdminDashboard({
   const [experienceText, setExperienceText] = useState('');
   const [educationText, setEducationText] = useState('');
   const [skillsText, setSkillsText] = useState('');
-  const [linksText, setLinksText] = useState('');
+  const [linksText, setLinksText] = useState(
+    'https://github.com/mee3955-oss\nhttps://github.com/mee3955-oss/yeongmi'
+  );
   const [privateMemo, setPrivateMemo] = useState('');
   const [fileName, setFileName] = useState('');
   const [fileMimeType, setFileMimeType] = useState('');
